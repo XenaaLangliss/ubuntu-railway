@@ -1,0 +1,30 @@
+# Production LiveKit Deployment for Railway
+# This runs LiveKit server directly without Docker-in-Docker
+
+FROM livekit/livekit-server:latest
+
+# Install curl for health checks (Alpine-based image)
+USER root
+RUN apk add --no-cache curl
+
+# Set working directory
+WORKDIR /app
+
+# Copy LiveKit configuration
+# Using production config by default, fallback to regular config
+COPY livekit-production.yaml /app/livekit.yaml
+
+# Expose LiveKit ports
+# 7880 - HTTP/WebSocket API
+# 7881 - TURN/TCP
+# 7882 - WebRTC/UDP
+# 50000-60000 - RTP (media traffic)
+EXPOSE 7880 7881 7882/udp
+
+# Health check using curl
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:7880 || exit 1
+
+# Start LiveKit server
+# Note: Railway sets PORT env var, but LiveKit uses 7880 from config
+CMD ["livekit-server", "--config", "/app/livekit.yaml", "--bind", "0.0.0.0"]

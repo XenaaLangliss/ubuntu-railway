@@ -1,0 +1,60 @@
+port: 7880
+bind_addresses:
+  - "0.0.0.0"
+
+# RTC configuration
+rtc:
+  port_range_start: 50000
+  port_range_end: 60000
+  # Use TCP fallback for better connectivity
+  use_tcp_transport: true
+  tcp_port: 7881
+  # ICE server configuration
+  ice_servers:
+    - urls:
+        - stun:stun.l.google.com:19302
+
+# Redis configuration (optional, for multi-instance deployments)
+# redis:
+#   address: localhost:6379
+
+# Room configuration
+room:
+  # Auto-create rooms
+  auto_create: true
+  # Empty timeout in seconds
+  empty_timeout: 300
+  # Max participants per room
+  max_participants: 100
+
+# API keys - MUST be changed for production!
+# Generate with: docker run --rm livekit/livekit-server generate-keys
+keys:
+  # Default dev keys - REPLACE THESE IN PRODUCTION!
+  devkey: APIfVxKzBnLQDH8WtBEULCJ7QZcqFcGBmPvL3YmJvHF
+
+# Logging
+logging:
+  level: info
+  # Uncomment to enable JSON logging
+  # json: true
+
+# Turn server (optional but recommended for production)
+# turn:
+#   enabled: true
+#   domain: turn.yourdomain.com
+#   cert_file: /path/to/cert.pem
+#   key_file: /path/to/key.pem
+
+# Webhook (optional - for event notifications)
+# webhook:
+#   api_key: your-webhook-key
+#   urls:
+#     - https://your-webhook-endpoint.com/livekit
+
+# Node configuration
+# node:
+#   ip: <your-public-ip>
+
+# Development mode settings
+# dev_mode: true

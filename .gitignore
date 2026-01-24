@@ -1,0 +1,33 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Docker volumes
+livekit-data/
+redis-data/
+
+# Logs
+*.log
+/var/log/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# LiveKit generated files
+/opt/livekit/*.pem
+/opt/livekit/*.crt
+/opt/livekit/*.key

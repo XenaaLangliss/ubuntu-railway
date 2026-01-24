@@ -1,0 +1,83 @@
+# LiveKit Production Configuration for Railway
+# IMPORTANT: Replace API keys before deploying to production!
+
+port: 7880
+bind_addresses:
+  - "0.0.0.0"
+
+# RTC configuration
+rtc:
+  # Port range for RTP/UDP traffic
+  port_range_start: 50000
+  port_range_end: 60000
+
+  # TCP fallback for clients behind restrictive firewalls
+  use_tcp_transport: true
+  tcp_port: 7881
+
+  # ICE server configuration (STUN)
+  ice_servers:
+    - urls:
+        - stun:stun.l.google.com:19302
+        - stun:stun1.l.google.com:19302
+
+# Room configuration
+room:
+  # Automatically create rooms when clients connect
+  auto_create: true
+
+  # Close empty rooms after 5 minutes
+  empty_timeout: 300
+
+  # Maximum participants per room
+  max_participants: 100
+
+  # Maximum room duration (24 hours)
+  max_duration: 86400
+
+# API keys - CRITICAL: Generate new keys for production!
+# Generate with: docker run --rm livekit/livekit-server generate-keys
+keys:
+  # REPLACE THESE KEYS IN PRODUCTION!
+  # These are placeholder keys for testing only
+  devkey: APIfVxKzBnLQDH8WtBEULCJ7QZcqFcGBmPvL3YmJvHF
+
+# Logging
+logging:
+  level: info
+  # Enable sample logging for debugging
+  sample: true
+
+# Node configuration
+# Uncomment and set your Railway public URL or domain
+# node:
+#   ip: <your-railway-app>.railway.app
+
+# Webhook configuration (optional)
+# Receive real-time notifications for room events
+# webhook:
+#   api_key: your-webhook-secret-key
+#   urls:
+#     - https://your-app.com/webhook/livekit
+
+# TURN server (optional but recommended for production)
+# Improves connectivity for clients behind strict NATs/firewalls
+# turn:
+#   enabled: true
+#   domain: turn.yourdomain.com
+#   tls_port: 5349
+#   udp_port: 3478
+#   # For Let's Encrypt or custom certificates
+#   cert_file: /certs/cert.pem
+#   key_file: /certs/key.pem
+
+# Redis for horizontal scaling (optional)
+# Uncomment if you add Redis to your Railway project
+# redis:
+#   address: ${REDIS_HOST}:${REDIS_PORT}
+#   # password: ${REDIS_PASSWORD}
+#   db: 0
+
+# Region configuration for multi-region deployments
+# region:
+#   name: us-west
