@@ -43,11 +43,39 @@ docker run --rm livekit/livekit-server generate-keys
 
 See `.env.example` for a complete list of configuration options.
 
+## 🚀 Deployment Options
+
+This repository offers **two deployment configurations**:
+
+### Option 1: Production LiveKit Server (Recommended for Railway)
+**Direct LiveKit deployment** - Simple, production-ready, optimized for Railway.
+
+- ✅ Best for: POC and production deployments
+- ✅ Works perfectly with Railway's infrastructure
+- ✅ Lower resource usage, faster startup
+- 📋 Uses: `Dockerfile.livekit` + `railway.production.json`
+
+### Option 2: Development VM (Current Setup)
+**Ubuntu VM with web terminal** - Useful for debugging and development.
+
+- ✅ Best for: Local testing and exploration
+- ⚠️ Limited on Railway (Docker-in-Docker not supported)
+- 📋 Uses: `Dockerfile` + `railway.json`
+
+**📖 See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md) for detailed deployment instructions and migration guide.**
+
 ## Deploy and Host
 
-### Quick Deploy to Railway
+### Quick Deploy to Railway (Production LiveKit)
 
-1. Click the deploy button above to deploy this template to Railway
+**Recommended approach for POC/Production:**
+
+1. **Rename config file**:
+   ```bash
+   mv railway.production.json railway.json
+   ```
+
+2. Click the deploy button above to deploy this template to Railway
 2. Set the required environment variables (PORT, USERNAME, PASSWORD)
 3. Wait for the deployment to complete (takes 3-5 minutes)
 4. Access the web terminal via the Railway-provided domain
