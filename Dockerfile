@@ -2,17 +2,35 @@ FROM ubuntu:22.04
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y wget curl git python3 python3-pip neofetch && \
+    apt-get install -y curl git python3 python3-pip neofetch openssh-server sudo tmux nano ca-certificates && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN wget -qO /bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 && \
-    chmod +x /bin/ttyd
+RUN useradd -m -s /bin/bash claude && \
+    usermod -aG sudo claude && \
+    echo "claude ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    mkdir -p /home/claude/proyectos && \
+    chown -R claude:claude /home/claude
 
-RUN echo "neofetch" >> /root/.bashrc && \
-    echo "cd /root" >> /root/.bashrc
+# Instalar Claude Code nativo como el usuario claude (no como root)
+USER claude
+RUN curl -fsSL https://claude.ai/install.sh | bash
+USER root
 
-EXPOSE $PORT
+RUN mkdir -p /run/sshd
 
-CMD ["/bin/bash", "-c", "\
-    echo \"export PS1='\\[\\033[01;32m\\]$USERNAME@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\" >> /root/.bashrc && \
-    /bin/ttyd -p $PORT -c $USERNAME:$PASSWORD /bin/bash"]
+RUN sed -i 's/#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "PermitRootLogin no" >> /etc/ssh/sshd_config && \
+    echo "AllowUsers claude" >> /etc/ssh/sshd_config
+
+RUN echo "neofetch" >> /home/claude/.bashrc && \
+    echo 'export PATH="/home/claude/.local/bin:$PATH"' >> /home/claude/.bashrc && \
+    echo "cd /home/claude/proyectos" >> /home/claude/.bashrc
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 22
+
+CMD ["/entrypoint.sh"]
