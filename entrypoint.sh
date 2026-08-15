@@ -19,11 +19,11 @@ chown claude:claude /home/claude/proyectos
 
 # Lanzar Claude Code en modo remote-control dentro de tmux, como el usuario claude
 if [ -x "/home/claude/.local/bin/claude" ]; then
-    su - claude -c "tmux new-session -d -s claude-session 'cd /home/claude/proyectos && /home/claude/.local/bin/claude remote-control'" \
+    su - claude -c "tmux new-session -d -s claude-session '/home/claude/.local/bin/claude remote-control; echo; echo [salió con código \$?]; exec bash'" \
         && echo "Sesión tmux 'claude-session' iniciada." \
         || echo "AVISO: no se pudo iniciar tmux para claude."
 else
-    echo "AVISO: /home/claude/.local/bin/claude no existe — omitiendo tmux."
+    echo "AVISO: claude no está instalado — omitiendo tmux."
 fi
 
 exec /usr/sbin/sshd -D -e -p 22
