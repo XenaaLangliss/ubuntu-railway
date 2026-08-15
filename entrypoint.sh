@@ -3,7 +3,6 @@ set -e
 
 ssh-keygen -A
 
-# Escribir la public key desde variable de entorno
 if [ -n "$SSH_PUBLIC_KEY" ]; then
     echo "$SSH_PUBLIC_KEY" > /home/claude/.ssh/authorized_keys
     chmod 600 /home/claude/.ssh/authorized_keys
@@ -13,7 +12,4 @@ else
     exit 1
 fi
 
-# Railway asigna el puerto dinámicamente en $PORT
-echo "Port ${PORT:-22}" >> /etc/ssh/sshd_config
-
-exec /usr/sbin/sshd -D -e
+exec /usr/sbin/sshd -D -e -p 22
